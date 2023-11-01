@@ -1,6 +1,6 @@
 # Setup Environment
 
-| [Create CA](#create-ca) | [Configure Event Grid](#configure-event-grid-namespace) | [Configure IoTMQ](#configure-iotmq)  [Configure Mosquitto](#configure-mosquitto-with-tls-and-x509-authentication) | [Development tools](#configure-development-tools) |
+| [Create CA](#create-ca) | [Configure Event Grid](#configure-event-grid-namespace) | [Configure IoTMQ](#configure-iotmq) | [Configure Mosquitto](#configure-mosquitto-with-tls-and-x509-authentication) | [Development tools](#configure-development-tools) |
 
 Once your environment is configured you can configure your connection settings as environment variables that will be loaded by the [Mqtt client extensions](./mqttclients/README.md)
 
@@ -80,7 +80,7 @@ az resource create \
 > [!NOTE]
 > For portal configuration, use [this link](https://portal.azure.com/?microsoft_azure_marketplace_ItemHideKey=PubSubNamespace&microsoft_azure_eventgrid_assettypeoptions={"PubSubNamespace":{"options":""}}) and follow [these instructions](https://learn.microsoft.com/en-us/azure/event-grid/mqtt-publish-and-subscribe-portal).
 
-## Configure IoTMq
+## Configure IoTMQ
 
 Install a Kubernetes cluster, eg with `k3d`
 
@@ -90,7 +90,7 @@ k3d cluster create  \
             -p '8883:8883@loadbalancer' 
 ```
 
-The local instance of IoTMq requires a certificate to expose a TLS endpoint, the chain `chain.pem` used to create this cert needs to be trusted by clients.
+The local instance of IoTMQ requires a certificate to expose a TLS endpoint, the chain `chain.pem` used to create this cert needs to be trusted by clients.
 
 Using the test ca, create a certificate for `localhost`, and store the certificate files in the `_iotmq` folder.
 
