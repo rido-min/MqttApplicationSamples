@@ -1,0 +1,11 @@
+[root]
+subject = "O=RidoMqttCA,CN=RidoMqttCA Root CA"
+
+[root.attributes]
+organization = "Rido"
+
+[intermediate]
+subject = " O=RidoMqttCA,CN=RidoMqttCA Intermediate CA"
+
+[intermediate.attributes]
+foor = "bar"

@@ -64,8 +64,8 @@ spec:
   authenticationMethods: 
     - x509: 
         trustedClientCaCert: client-ca-configmap
-        # attributes:
-        #   secretName: x509-attributes
+        attributes:
+          secretName: x509-attributes
 ---
 apiVersion: mq.iotoperations.azure.com/v1beta1
 kind: DiagnosticService
