@@ -46,12 +46,26 @@ metadata:
 spec:
   serviceType: loadBalancer # or clusterIp
   brokerRef: "broker"
-  authenticationEnabled: false
+  authenticationEnabled: true
   authorizationEnabled: false
   port: 8883
-   tls:
+  tls:
     manual:
       secretName: "iotmq-tls-secret"
+---
+apiVersion: mq.iotoperations.azure.com/v1beta1 
+kind: BrokerAuthentication 
+metadata: 
+  name: "x509-auth-only" 
+  namespace: default 
+spec: 
+  listenerRef: 
+    - "listener8883" 
+  authenticationMethods: 
+    - x509: 
+        trustedClientCaCert: client-ca-configmap
+        # attributes:
+        #   secretName: x509-attributes
 ---
 apiVersion: mq.iotoperations.azure.com/v1beta1
 kind: DiagnosticService

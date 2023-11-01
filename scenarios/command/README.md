@@ -1,6 +1,6 @@
 #  :point_right: Command (Request/Response)
 
-| [Create Client Certificates](#lock-create-client-certificates) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
+| [Create Client Certificates](#lock-create-client-certificates) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure IoTMQ](#incoming_envelope-configure-iotmq) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
 
 This scenario simulates the request-response messaging pattern. Request-response uses two topics, one for the request and one for the response.
 
@@ -155,14 +155,32 @@ echo "MQTT_CERT_FILE=mobile-app.pem" >> mobile-app.env
 echo "MQTT_KEY_FILE=mobile-app.key" >> mobile-app.env
 ```
 
+## :incoming_envelope: Configure IoTMQ
+
+The required `.env` files can be configured manually, we provide the script below as a reference to create those files, as they are ignored from git.
+
+```bash
+# from folder scenarios/command
+echo "MQTT_HOST_NAME=localhost" > vehicle03.env
+echo "MQTT_CERT_FILE=vehicle03.pem" >> vehicle03.env
+echo "MQTT_KEY_FILE=vehicle03.key" >> vehicle03.env
+echo "MQTT_CLIENT_ID=vehicle03" >> vehicle03.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle03.env
+
+echo "MQTT_HOST_NAME=localhost" > mobile-app.env
+echo "MQTT_CERT_FILE=mobile-app.pem" >> mobile-app.env
+echo "MQTT_KEY_FILE=mobile-app.key" >> mobile-app.env
+echo "MQTT_CLIENT_ID=mobile-app" >> mobile-app.env
+echo "MQTT_CA_FILE=chain.pem" >> mobile-app.env
+```
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
 
 ```bash
-# from folder _mosquitto
+# from folder scenarios/command
 cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
-cp chain.pem ../scenarios/command
 ```
 The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X509 client connections.
 

@@ -1,6 +1,6 @@
 # :point_right: Getting Started
 
-| [Create the Client Certificate](#lock-create-the-client-certificate) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
+| [Create the Client Certificate](#lock-create-the-client-certificate) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure IoTMQ](#incoming_envelope-configure-iotmq) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
 
 This scenario showcases how to create resources such as client, topic spaces, and permission bindings to publish and subscribe MQTT messages.
 
@@ -103,14 +103,30 @@ echo "MQTT_CERT_FILE=sample_client.pem" >> .env
 echo "MQTT_KEY_FILE=sample_client.key" >> .env
 ```
 
+## :incoming_envelope: Configure IoTMQ
+
+The required `.env` files can be configured manually, we provide the script below as a reference to create those files, as they are ignored from git.
+
+```bash
+# from folder scenarios/getting_started
+cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
+
+echo "MQTT_HOST_NAME=localhost" > .env
+echo "MQTT_CA_FILE=chain.pem" >> .env
+echo "MQTT_USERNAME=sample_client" >> .env
+echo "MQTT_CLIENT_ID=sample_client" >> .env
+echo "MQTT_CERT_FILE=sample_client.pem" >> .env
+echo "MQTT_KEY_FILE=sample_client.key" >> .env
+```
+
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
 
 ```bash
-# from folder _mosquitto
+# from folder _getting_started
 cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
-cp chain.pem ../scenarios/getting_started
 ```
 The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X509 client connections.
 

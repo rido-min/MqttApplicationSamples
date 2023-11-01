@@ -1,6 +1,6 @@
 # Setup Environment
 
-| [Create CA](#create-ca) | [Configure Event Grid](#configure-event-grid-namespace) | [Configure Mosquitto](#configure-mosquitto-with-tls-and-x509-authentication) | [Development tools](#configure-development-tools) |
+| [Create CA](#create-ca) | [Configure Event Grid](#configure-event-grid-namespace) | [Configure IoTMQ](#configure-iotmq)  [Configure Mosquitto](#configure-mosquitto-with-tls-and-x509-authentication) | [Development tools](#configure-development-tools) |
 
 Once your environment is configured you can configure your connection settings as environment variables that will be loaded by the [Mqtt client extensions](./mqttclients/README.md)
 
@@ -79,6 +79,41 @@ az resource create \
 
 > [!NOTE]
 > For portal configuration, use [this link](https://portal.azure.com/?microsoft_azure_marketplace_ItemHideKey=PubSubNamespace&microsoft_azure_eventgrid_assettypeoptions={"PubSubNamespace":{"options":""}}) and follow [these instructions](https://learn.microsoft.com/en-us/azure/event-grid/mqtt-publish-and-subscribe-portal).
+
+## Configure IoTMq
+
+Install a Kubernetes cluster, eg with `k3d`
+
+```bash
+k3d cluster create  \
+            -p '1883:1883@loadbalancer' \
+            -p '8883:8883@loadbalancer' 
+```
+
+The local instance of IoTMq requires a certificate to expose a TLS endpoint, the chain `chain.pem` used to create this cert needs to be trusted by clients.
+
+Using the test ca, create a certificate for `localhost`, and store the certificate files in the `_iotmq` folder.
+
+```bash
+# from folder _iotmq
+cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
+step certificate create localhost localhost.crt localhost.key \
+      --ca ~/.step/certs/intermediate_ca.crt \
+      --ca-key ~/.step/secrets/intermediate_ca_key \
+      --no-password \
+      --insecure \
+      --not-after 2400h
+```
+
+These files are used by the IoTMQ deployment file `iotmq.yaml` as a tls secret and a config map.
+
+```bash
+# from folder _iotmq
+./deploy.sh
+```
+
+note> To verify IoTMQ is successfully installed and configured with TLS run `openssl s_client -connect localhost:8883 -CAfile chain.pem`, for more troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
+
 
 ## Configure Mosquitto with TLS and X509 Authentication
 

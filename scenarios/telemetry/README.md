@@ -1,6 +1,6 @@
 # :point_right: Telemetry (Fan-in)
 
-| [Create Client Certificates](#lock-create-client-certificates) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
+| [Create Client Certificates](#lock-create-client-certificates) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure IoTMQ](#incoming_envelope-configure-iotmq) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
 
 This scenario shows how multiple clients send data (the producers) to different topics that can be consumed by a single application (the consumer).  This scenario also showcases routing the data to an Azure service.
 
@@ -149,14 +149,41 @@ echo "MQTT_CERT_FILE=map-app.pem" >> map-app.env
 echo "MQTT_KEY_FILE=map-app.key" >> map-app.env
 ```
 
+## :incoming_envelope: Configure IoTMQ
+
+The required `.env` files can be configured manually, we provide the script below as a reference to create those files, as they are ignored from git.
+
+```bash
+# from folder scenarios/telemetry
+
+cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
+
+echo "MQTT_HOST_NAME=localhost" > vehicle01.env
+echo "MQTT_CLIENT_ID=vehicle01" >> vehicle01.env
+echo "MQTT_CERT_FILE=vehicle01.pem" >> vehicle01.env
+echo "MQTT_KEY_FILE=vehicle01.key" >> vehicle01.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle01.env
+
+echo "MQTT_HOST_NAME=localhost" > vehicle02.env
+echo "MQTT_CLIENT_ID=vehicle02" >> vehicle02.env
+echo "MQTT_CERT_FILE=vehicle02.pem" >> vehicle02.env
+echo "MQTT_KEY_FILE=vehicle02.key" >> vehicle02.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle02.env
+
+echo "MQTT_HOST_NAME=localhost" > map-app.env
+echo "MQTT_CLIENT_ID=map-app" >> map-app.env
+echo "MQTT_CERT_FILE=map-app.pem" >> map-app.env
+echo "MQTT_KEY_FILE=map-app.key" >> map-app.env
+echo "MQTT_CA_FILE=chain.pem" >> map-app.env
+```
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
 
 ```bash
-# from folder _mosquitto
+# from folder scenarios/telemetry
 cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
-cp chain.pem ../scenarios/telemetry
 ```
 The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X509 client connections.
 

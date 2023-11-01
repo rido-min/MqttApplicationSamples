@@ -1,6 +1,6 @@
 # :point_right: Alert (Fan-out)
 
-| [Create Client Certificates](#lock-create-client-certificates) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
+| [Create Client Certificates](#lock-create-client-certificates) | [Configure Event Grid Namespaces](#triangular_ruler-configure-event-grid-namespaces) | [Configure IoTMQ](#incoming_envelope-configure-iotmq) | [Configure Mosquitto](#fly-configure-mosquitto) | [Run the Sample](#game_die-run-the-sample) |
 
 This scenario shows how to send a weather alert to a vehicle fleet. Instead of sending one message to each vehicle, the message is sent to a topic that is subscribed by all vehicles. This is a fan-out scenario. Additionally, to avoid missing any message in case of losing network connectivity, the vehicles are using a persistent session, this way the broker will keep the messages until the vehicle is connected again. The sender uses the `MessageExpiryInterval` to make the alert available for 5 minutes. 
 
@@ -151,19 +151,48 @@ echo "MQTT_CERT_FILE=control-tower.pem" >> control-tower.env
 echo "MQTT_KEY_FILE=control-tower.key" >> control-tower.env
 ```
 
+## :incoming_envelope: Configure IoTMQ
+
+The required `.env` files can be configured manually, we provide the script below as a reference to create those files, as they are ignored from git.
+
+```bash
+# from folder scenarios/alert
+
+echo "MQTT_HOST_NAME=localhost" > vehicle04.env
+echo "MQTT_CLIENT_ID=vehicle04" >> vehicle04.env
+echo "MQTT_CERT_FILE=vehicle04.pem" >> vehicle04.env
+echo "MQTT_KEY_FILE=vehicle04.key" >> vehicle04.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle04.env
+echo "MQTT_CLEAN_SESSION=false" >> vehicle04.env
+
+echo "MQTT_HOST_NAME=localhost" > vehicle05.env
+echo "MQTT_CLIENT_ID=vehicle05" >> vehicle05.env
+echo "MQTT_CERT_FILE=vehicle05.pem" >> vehicle05.env
+echo "MQTT_KEY_FILE=vehicle05.key" >> vehicle05.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle05.env
+echo "MQTT_CLEAN_SESSION=false" >> vehicle05.env
+
+echo "MQTT_HOST_NAME=localhost" > control-tower.env
+echo "MQTT_CLIENT_ID=control-tower" >> control-tower.env
+echo "MQTT_CERT_FILE=control-tower.pem" >> control-tower.env
+echo "MQTT_KEY_FILE=control-tower.key" >> control-tower.env
+echo "MQTT_CA_FILE=chain.pem" >> control-tower.env
+
+```
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
 
 ```bash
-# from folder _mosquitto
+# from folder scenarios/alert
 cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
-cp chain.pem ../scenarios/alert
 ```
 The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X509 client connections.
 
 ```bash
 # from folder scenarios/alert
+
 echo "MQTT_HOST_NAME=localhost" > vehicle04.env
 echo "MQTT_CLIENT_ID=vehicle04" >> vehicle04.env
 echo "MQTT_CERT_FILE=vehicle04.pem" >> vehicle04.env

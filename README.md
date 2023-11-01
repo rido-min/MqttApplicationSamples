@@ -18,6 +18,7 @@ These samples provide guidance to build Pub/Sub applications targeting MQTT Brok
 
 The instructions are provided for the following MQTT Brokers:
 - **Azure Event Grid Namespaces** 
+- **Azure IoT MQ** (for Kubernetes at the edge)
 - **Mosquitto** for local development
 
 > Note: These samples can also be leveraged for any MQTT Broker that supports X509 certificates authentication
@@ -31,6 +32,7 @@ The instructions are provided for the following MQTT Brokers:
     - To test locally on your machine:
         - Use a Linux environment as the samples are optimized to run in Linux.
             - To install and run Linux on Windows, run `wsl --install -d Ubuntu`. After installation is complete, you can run `wsl` to start running commands on your Ubuntu subsystem whenever you open a new terminal window. [Learn more](https://learn.microsoft.com/en-us/windows/wsl/)
+            - To use `Azure IoT MQ` you need to have a Kubernetes cluster available.
             - **Note:** To run in native Windows, you must adapt the scripts to use Windows paths.
         - Clone this repository to any directory in your Linux environment: `git clone https://github.com/Azure/MQTTBrokerPrivatePreview.git`
 - Follow the instructions in the [Setup](./Setup.md) to setup your environment.
