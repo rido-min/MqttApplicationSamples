@@ -36,7 +36,7 @@ internal class Program
         }
 
         MqttClientConnectResult connAck = await mqttClient!.ConnectAsync(new MqttClientOptionsBuilder()
-            .WithJWT(cs, GetToken, mqttClient, TimeSpan.FromMinutes(2))
+            .WithJWT(cs, GetToken, mqttClient, TimeSpan.FromHours(1))
             .Build());
 
         Console.WriteLine($"Client Connected: {mqttClient.IsConnected} with CONNACK: {connAck.ResultCode} with auth method {mqttClient.Options.AuthenticationMethod}");
