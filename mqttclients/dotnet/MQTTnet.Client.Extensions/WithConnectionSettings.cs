@@ -12,9 +12,15 @@ public static partial class MqttNetExtensions
             .WithTcpServer(cs.HostName, cs.TcpPort)
             .WithKeepAlivePeriod(TimeSpan.FromSeconds(cs.KeepAliveInSeconds))
             .WithCredentials(cs.Username, cs.Password)
-            .WithCleanSession(cs.CleanSession)
             .WithProtocolVersion(Formatter.MqttProtocolVersion.V500)
             .WithTlsSettings(cs);
+
+        if (cs.CleanSession == false)
+        {
+            builder
+                .WithCleanSession(cs.CleanSession)
+                .WithSessionExpiryInterval(uint.MaxValue);
+        }
 
         builder.WithClientId(cs.ClientId);
         return builder;
