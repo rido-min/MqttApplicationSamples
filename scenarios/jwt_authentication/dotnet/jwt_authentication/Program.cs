@@ -11,6 +11,19 @@ Trace.Listeners.Add(new ConsoleTraceListener());
 MqttConnectionSettings cs = MqttConnectionSettings.CreateFromEnvVars();
 
 IMqttClient mqttClient = new MqttFactory().CreateMqttClient(MqttNetTraceLogger.CreateTraceLogger());
+
+mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
+
+async Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
+{
+    if (arg.ClientWasConnected)
+    {   
+        Console.WriteLine($"Client Disconnected: {arg.ClientWasConnected} with reason {arg.Reason}. Reconnecting in 100 ms");
+        await Task.Delay(100);
+        await mqttClient.ReconnectAsync();
+    }
+}
+
 MqttClientConnectResult connAck = await mqttClient!.ConnectAsync(new MqttClientOptionsBuilder()
     .WithJWT(cs, GetToken, mqttClient, TimeSpan.FromHours(1))
     .Build());
