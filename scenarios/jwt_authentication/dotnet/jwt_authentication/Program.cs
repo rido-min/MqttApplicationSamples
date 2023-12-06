@@ -36,7 +36,7 @@ internal class Program
         }
 
         MqttClientConnectResult connAck = await mqttClient!.ConnectAsync(new MqttClientOptionsBuilder()
-            .WithJWT(cs, GetToken, mqttClient, TimeSpan.FromHours(1))
+            .WithJWT(cs, GetToken, mqttClient, TimeSpan.FromMinutes(2))
             .Build());
 
         Console.WriteLine($"Client Connected: {mqttClient.IsConnected} with CONNACK: {connAck.ResultCode} with auth method {mqttClient.Options.AuthenticationMethod}");
@@ -52,7 +52,7 @@ internal class Program
         {
             Console.WriteLine($"->Sending Message {counter}");
             MqttClientPublishResult puback = await mqttClient.PublishStringAsync("sample/topic1", "hello world!" + counter++, MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
-            await Console.Out.WriteLineAsync($"\t <- PubAck {puback.PacketIdentifier} {puback.ReasonString} {puback.ReasonCode}");
+            await Console.Out.WriteLineAsync($" <- PubAck {puback.PacketIdentifier} {puback.ReasonString} {puback.ReasonCode}");
             await Task.Delay(10000);
         }
     }
