@@ -82,13 +82,11 @@ az resource create \
 
 ## Configure IoTMQ
 
-Install a Kubernetes cluster, eg with `k3d`
+### Prepare Azure Arc-enabled Kubernetes cluster
+Follow the following to create a Kubernetes cluster: [tutorial](https://learn.microsoft.com/en-us/azure/iot-operations/deploy-iot-ops/howto-prepare-cluster?tabs=aks-edge-essentials)
 
-```bash
-k3d cluster create  \
-            -p '1883:1883@loadbalancer' \
-            -p '8883:8883@loadbalancer' 
-```
+### Configure cluster and deploy AIO
+1. Follow the following to deploy Azure IoT Operations (AIO): [tutorial](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/quickstart-deploy?tabs=windows#configure-cluster-and-deploy-azure-iot-operations)
 
 The local instance of IoTMQ requires a certificate to expose a TLS endpoint, the chain `chain.pem` used to create this cert needs to be trusted by clients.
 
