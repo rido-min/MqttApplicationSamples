@@ -88,8 +88,10 @@ Follow the following to create a Kubernetes cluster: [tutorial](https://learn.mi
 ### Configure cluster and deploy AIO   
 Follow the following to deploy Azure IoT Operations (AIO): [tutorial](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/quickstart-deploy?tabs=windows#configure-cluster-and-deploy-azure-iot-operations)
 
+### Configure MQTT Broker and Listener
+Follow the following to configure MQTT [Broker](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-availability-scale) and [Listener](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-tls-auto?tabs=test#enable-tls-for-a-port) 
 
-note> To verify IoTMQ is successfully installed and configured with TLS run `openssl s_client -connect localhost:8883 -CAfile chain.pem`, for more troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
+For troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
 
 
 ## Configure Mosquitto with TLS and X509 Authentication
