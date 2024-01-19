@@ -89,7 +89,7 @@ Follow the following to create a Kubernetes cluster: [tutorial](https://learn.mi
 Follow the following to deploy Azure IoT Operations (AIO): [tutorial](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/quickstart-deploy?tabs=windows#configure-cluster-and-deploy-azure-iot-operations)
 
 ### Configure MQTT Broker and Listener
-Follow the following to configure MQTT [Broker](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-availability-scale) and [Listener](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-tls-auto?tabs=test#enable-tls-for-a-port) 
+Follow the following to configure MQTT [Broker](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-availability-scale) and [Listener](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-tls-manual#enable-tls-for-a-listener) 
 
 For troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
 
