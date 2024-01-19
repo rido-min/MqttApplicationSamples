@@ -115,8 +115,6 @@ echo "MQTT_HOST_NAME=localhost" > .env
 echo "MQTT_CA_FILE=chain.pem" >> .env
 echo "MQTT_USERNAME=sample_client" >> .env
 echo "MQTT_CLIENT_ID=sample_client" >> .env
-echo "MQTT_CERT_FILE=sample_client.pem" >> .env
-echo "MQTT_KEY_FILE=sample_client.key" >> .env
 ```
 
 
