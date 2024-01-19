@@ -91,6 +91,9 @@ Follow the following to deploy Azure IoT Operations (AIO): [tutorial](https://le
 ### Configure MQTT Broker and Listener
 Follow the following to configure MQTT [Broker](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-availability-scale) and [Listener](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-tls-manual#enable-tls-for-a-listener) 
 
+
+Create the secret being used in Listener: `kubectl create secret tls server-cert-secret -n azure-iot-operations --cert localhost.crt --key localhost.key`
+
 For troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
 
 
