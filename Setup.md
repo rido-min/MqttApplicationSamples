@@ -82,37 +82,19 @@ az resource create \
 
 ## Configure IoTMQ
 
-Install a Kubernetes cluster, eg with `k3d`
+### Prepare Azure Arc-enabled Kubernetes cluster
+Follow the following to create a Kubernetes cluster: [tutorial](https://learn.microsoft.com/en-us/azure/iot-operations/deploy-iot-ops/howto-prepare-cluster?tabs=aks-edge-essentials)
 
-```bash
-k3d cluster create  \
-            -p '1883:1883@loadbalancer' \
-            -p '8883:8883@loadbalancer' 
-```
+### Configure cluster and deploy AIO   
+Follow the following to deploy Azure IoT Operations (AIO): [tutorial](https://learn.microsoft.com/en-us/azure/iot-operations/get-started/quickstart-deploy?tabs=windows#configure-cluster-and-deploy-azure-iot-operations)
 
-The local instance of IoTMQ requires a certificate to expose a TLS endpoint, the chain `chain.pem` used to create this cert needs to be trusted by clients.
+### Configure MQTT Broker and Listener
+Follow the following to configure MQTT [Broker](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-availability-scale) and [Listener](https://learn.microsoft.com/en-us/azure/iot-operations/manage-mqtt-connectivity/howto-configure-tls-manual#enable-tls-for-a-listener) 
 
-Using the test ca, create a certificate for `localhost`, and store the certificate files in the `_iotmq` folder.
 
-```bash
-# from folder _iotmq
-cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
-step certificate create localhost localhost.crt localhost.key \
-      --ca ~/.step/certs/intermediate_ca.crt \
-      --ca-key ~/.step/secrets/intermediate_ca_key \
-      --no-password \
-      --insecure \
-      --not-after 2400h
-```
+Create the secret being used in Listener: `kubectl create secret tls server-cert-secret -n azure-iot-operations --cert localhost.crt --key localhost.key`
 
-These files are used by the IoTMQ deployment file `iotmq.yaml` as a tls secret and a config map.
-
-```bash
-# from folder _iotmq
-./deploy.sh
-```
-
-note> To verify IoTMQ is successfully installed and configured with TLS run `openssl s_client -connect localhost:8883 -CAfile chain.pem`, for more troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
+For troubleshooting instructions see [troubleshoot IoTMQ deployment](TBD)
 
 
 ## Configure Mosquitto with TLS and X509 Authentication
