@@ -163,18 +163,21 @@ The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X
 ```bash
 # from folder scenarios/telemetry
 echo "MQTT_HOST_NAME=localhost" > vehicle01.env
+echo "MQTT_TCP_PORT=8884" >> vehicle01.env
 echo "MQTT_CLIENT_ID=vehicle01" >> vehicle01.env
 echo "MQTT_CERT_FILE=vehicle01.pem" >> vehicle01.env
 echo "MQTT_KEY_FILE=vehicle01.key" >> vehicle01.env
 echo "MQTT_CA_FILE=chain.pem" >> vehicle01.env
 
 echo "MQTT_HOST_NAME=localhost" > vehicle02.env
+echo "MQTT_TCP_PORT=8884" >> vehicle02.env
 echo "MQTT_CLIENT_ID=vehicle02" >> vehicle02.env
 echo "MQTT_CERT_FILE=vehicle02.pem" >> vehicle02.env
 echo "MQTT_KEY_FILE=vehicle02.key" >> vehicle02.env
 echo "MQTT_CA_FILE=chain.pem" >> vehicle02.env
 
 echo "MQTT_HOST_NAME=localhost" > map-app.env
+echo "MQTT_TCP_PORT=8884" >> map-app.env
 echo "MQTT_CLIENT_ID=map-app" >> map-app.env
 echo "MQTT_CERT_FILE=map-app.pem" >> map-app.env
 echo "MQTT_KEY_FILE=map-app.key" >> map-app.env
@@ -187,8 +190,8 @@ To use mosquitto without certificates: change the port to 1883 and disable TLS
 ```bash
 # from folder scenarios/telemetry
 echo "MQTT_HOST_NAME=localhost" > vehicle01.env
-echo "MQTT_CLIENT_ID=vehicle01" >> vehicle01.env
 echo "MQTT_TCP_PORT=1883" >> vehicle01.env
+echo "MQTT_CLIENT_ID=vehicle01" >> vehicle01.env
 echo "MQTT_USE_TLS=false" >> vehicle01.env
 
 echo "MQTT_HOST_NAME=localhost" > vehicle02.env

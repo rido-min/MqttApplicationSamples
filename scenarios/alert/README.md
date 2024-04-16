@@ -165,6 +165,7 @@ The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X
 ```bash
 # from folder scenarios/alert
 echo "MQTT_HOST_NAME=localhost" > vehicle04.env
+echo "MQTT_TCP_PORT=8884" >> vehicle04.env
 echo "MQTT_CLIENT_ID=vehicle04" >> vehicle04.env
 echo "MQTT_CERT_FILE=vehicle04.pem" >> vehicle04.env
 echo "MQTT_KEY_FILE=vehicle04.key" >> vehicle04.env
@@ -172,6 +173,7 @@ echo "MQTT_CA_FILE=chain.pem" >> vehicle04.env
 echo "MQTT_CLEAN_SESSION=false" >> vehicle04.env
 
 echo "MQTT_HOST_NAME=localhost" > vehicle05.env
+echo "MQTT_TCP_PORT=8884" >> vehicle05.env
 echo "MQTT_CLIENT_ID=vehicle05" >> vehicle05.env
 echo "MQTT_CERT_FILE=vehicle05.pem" >> vehicle05.env
 echo "MQTT_KEY_FILE=vehicle05.key" >> vehicle05.env
@@ -179,6 +181,7 @@ echo "MQTT_CA_FILE=chain.pem" >> vehicle05.env
 echo "MQTT_CLEAN_SESSION=false" >> vehicle05.env
 
 echo "MQTT_HOST_NAME=localhost" > control-tower.env
+echo "MQTT_TCP_PORT=8884" >> control-tower.env
 echo "MQTT_CLIENT_ID=control-tower" >> control-tower.env
 echo "MQTT_CERT_FILE=control-tower.pem" >> control-tower.env
 echo "MQTT_KEY_FILE=control-tower.key" >> control-tower.env
@@ -191,20 +194,20 @@ To use mosquitto without certificates: change the port to 1883 and disable TLS
 ```bash
 # from folder scenarios/alert
 echo "MQTT_HOST_NAME=localhost" > vehicle04.env
-echo "MQTT_CLIENT_ID=vehicle04" >> vehicle04.env
 echo "MQTT_TCP_PORT=1883" >> vehicle04.env
+echo "MQTT_CLIENT_ID=vehicle04" >> vehicle04.env
 echo "MQTT_USE_TLS=false" >> vehicle04.env
 echo "MQTT_CLEAN_SESSION=false" >> vehicle04.env
 
 echo "MQTT_HOST_NAME=localhost" > vehicle05.env
-echo "MQTT_CLIENT_ID=vehicle05" >> vehicle05.env
 echo "MQTT_TCP_PORT=1883" >> vehicle05.env
+echo "MQTT_CLIENT_ID=vehicle05" >> vehicle05.env
 echo "MQTT_USE_TLS=false" >> vehicle05.env
 echo "MQTT_CLEAN_SESSION=false" >> vehicle05.env
 
 echo "MQTT_HOST_NAME=localhost" > control-tower.env
-echo "MQTT_CLIENT_ID=control-tower" >> control-tower.env
 echo "MQTT_TCP_PORT=1883" >> control-tower.env
+echo "MQTT_CLIENT_ID=control-tower" >> control-tower.env
 echo "MQTT_USE_TLS=false" >> control-tower.env
 ```
 

@@ -121,6 +121,7 @@ The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X
 ```bash
 # from folder scenarios/getting_started
 echo "MQTT_HOST_NAME=localhost" > .env
+echo "MQTT_TCP_PORT=8884" >> .env
 echo "MQTT_CLIENT_ID=sample_client" >> .env
 echo "MQTT_CERT_FILE=sample_client.pem" >> .env
 echo "MQTT_KEY_FILE=sample_client.key" >> .env

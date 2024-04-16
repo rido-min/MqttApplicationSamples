@@ -169,12 +169,14 @@ The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X
 ```bash
 # from folder scenarios/command
 echo "MQTT_HOST_NAME=localhost" > vehicle03.env
+echo "MQTT_TCP_PORT=8884" >> vehicle03.env
 echo "MQTT_CERT_FILE=vehicle03.pem" >> vehicle03.env
 echo "MQTT_KEY_FILE=vehicle03.key" >> vehicle03.env
 echo "MQTT_CLIENT_ID=vehicle03" >> vehicle03.env
 echo "MQTT_CA_FILE=chain.pem" >> vehicle03.env
 
 echo "MQTT_HOST_NAME=localhost" > mobile-app.env
+echo "MQTT_TCP_PORT=8884" >> mobile-app.env
 echo "MQTT_CERT_FILE=mobile-app.pem" >> mobile-app.env
 echo "MQTT_KEY_FILE=mobile-app.key" >> mobile-app.env
 echo "MQTT_CLIENT_ID=mobile-app" >> mobile-app.env
