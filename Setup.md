@@ -99,6 +99,14 @@ location=<location such as westus2>
 kv_name=<key vault name>
 ```
 
+## Login into your azure subscription
+
+```
+source az.env
+az login 
+az account set -s $sub_id
+```
+
 ### Have a K8s Cluster ready
 
 The codespaces configuration in this repo deploys a K8s cluster with `k3d`, any other supported cluster should also work, to verify your cluster is ready run `kubectl cluster-info`.
@@ -122,24 +130,27 @@ az iot ops init --simulate-plc --cluster $cluster_name --resource-group $rg --kv
 
 ### Configure IoT MQ to access from outside the cluster
 
-The default setup of AIO includes an instance of IoT MQ, with a broker configured with a test certificate. To access the MQTT secure endpoint you must enable the load balancer in your cluster.
+The default setup of AIO includes an instance of IoT MQ, with a broker configured with a test certificate. To access the MQTT secure endpoint you must enable the load balancer in your cluster and add the DNS name (localhost to access the cluster from your host) to the TLS server certificate:
 
+s
 ```
- kubectl patch certificate aio-mq-frontend-server-8883 -n azure-iot-operations \
+kubectl apply -f _mq/8883.yaml
+kubectl patch certificate aio-mq-frontend-server-8883 -n azure-iot-operations \
    --type='json' -p='[{"op": "add", "path": "/spec/dnsNames/-", "value": "localhost"}]'
 ```
 
-```
-step ca init \
-  --root=aio-test-ca.crt \
-  --key=aio-test-private.key \
-  --deployment-type standalone \
-  --name AioTestCA \
-  --dns localhost \
-  --address 127.0.0.1:443 \
-  --provisioner AioCaProvisioner
+#### Configure client authentication with X509 certificates
+
+
+The client certificates generated in each of the scenarios should chain to the CA created [above](#create-ca).
 
 ```
+cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
+kubectl configmap create mqtt-app-samples-root --from-file=client-ca.pem=chain.pem -n azure-iot-operations
+kubectl apply -f _mq/x509auth.yaml
+```
+
+
 
 ## Configure Mosquitto with TLS and X509 Authentication
 
