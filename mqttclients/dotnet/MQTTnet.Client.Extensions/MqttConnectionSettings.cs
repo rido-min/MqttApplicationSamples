@@ -29,7 +29,7 @@ public class MqttConnectionSettings
     }
     public string? Username { get; set; }
     public string? Password { get; set; }
-      public string? PasswordFile { get; set; }
+    public string? PasswordFile { get; set; }
     public int KeepAliveInSeconds { get; set; }
     public bool CleanSession { get; set; }
     public int TcpPort { get; set; }
