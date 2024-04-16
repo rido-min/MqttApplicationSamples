@@ -149,6 +149,42 @@ echo "MQTT_CERT_FILE=map-app.pem" >> map-app.env
 echo "MQTT_KEY_FILE=map-app.key" >> map-app.env
 ```
 
+## Configure IoT MQ
+
+Get the CA file to stablish the server TLS connection
+
+```bash
+# from scenarios/getting_started
+kubectl get configmap aio-ca-trust-bundle-test-only -n azure-iot-operations -o jsonpath='{.data.ca\.crt}' > chain.pem
+```
+
+Make sure the `client-ca` configmap has been created, from [SetUp](../../Setup.md)
+
+```bash
+# from folder scenarios/telemetry
+echo "MQTT_HOST_NAME=localhost" > vehicle01.env
+echo "MQTT_TCP_PORT=8883" >> vehicle01.env
+echo "MQTT_CLIENT_ID=vehicle01" >> vehicle01.env
+echo "MQTT_CERT_FILE=vehicle01.pem" >> vehicle01.env
+echo "MQTT_KEY_FILE=vehicle01.key" >> vehicle01.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle01.env
+
+echo "MQTT_HOST_NAME=localhost" > vehicle02.env
+echo "MQTT_TCP_PORT=8883" >> vehicle02.env
+echo "MQTT_CLIENT_ID=vehicle02" >> vehicle02.env
+echo "MQTT_CERT_FILE=vehicle02.pem" >> vehicle02.env
+echo "MQTT_KEY_FILE=vehicle02.key" >> vehicle02.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle02.env
+
+echo "MQTT_HOST_NAME=localhost" > map-app.env
+echo "MQTT_TCP_PORT=8883" >> map-app.env
+echo "MQTT_CLIENT_ID=map-app" >> map-app.env
+echo "MQTT_CERT_FILE=map-app.pem" >> map-app.env
+echo "MQTT_KEY_FILE=map-app.key" >> map-app.env
+echo "MQTT_CA_FILE=chain.pem" >> map-app.env
+```
+
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
@@ -182,7 +218,6 @@ echo "MQTT_CLIENT_ID=map-app" >> map-app.env
 echo "MQTT_CERT_FILE=map-app.pem" >> map-app.env
 echo "MQTT_KEY_FILE=map-app.key" >> map-app.env
 echo "MQTT_CA_FILE=chain.pem" >> map-app.env
-
 ```
 
 To use mosquitto without certificates: change the port to 1883 and disable TLS

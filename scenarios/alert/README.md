@@ -151,6 +151,44 @@ echo "MQTT_CERT_FILE=control-tower.pem" >> control-tower.env
 echo "MQTT_KEY_FILE=control-tower.key" >> control-tower.env
 ```
 
+## Configure IoT MQ
+
+Get the CA file to stablish the server TLS connection
+
+```bash
+# from scenarios/getting_started
+kubectl get configmap aio-ca-trust-bundle-test-only -n azure-iot-operations -o jsonpath='{.data.ca\.crt}' > chain.pem
+```
+
+Make sure the `client-ca` configmap has been created, from [SetUp](../../Setup.md)
+
+```bash
+# from folder scenarios/alert
+echo "MQTT_HOST_NAME=localhost" > vehicle04.env
+echo "MQTT_TCP_PORT=8883" >> vehicle04.env
+echo "MQTT_CLIENT_ID=vehicle04" >> vehicle04.env
+echo "MQTT_CERT_FILE=vehicle04.pem" >> vehicle04.env
+echo "MQTT_KEY_FILE=vehicle04.key" >> vehicle04.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle04.env
+echo "MQTT_CLEAN_SESSION=false" >> vehicle04.env
+
+echo "MQTT_HOST_NAME=localhost" > vehicle05.env
+echo "MQTT_TCP_PORT=8883" >> vehicle05.env
+echo "MQTT_CLIENT_ID=vehicle05" >> vehicle05.env
+echo "MQTT_CERT_FILE=vehicle05.pem" >> vehicle05.env
+echo "MQTT_KEY_FILE=vehicle05.key" >> vehicle05.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle05.env
+echo "MQTT_CLEAN_SESSION=false" >> vehicle05.env
+
+echo "MQTT_HOST_NAME=localhost" > control-tower.env
+echo "MQTT_TCP_PORT=8883" >> control-tower.env
+echo "MQTT_CLIENT_ID=control-tower" >> control-tower.env
+echo "MQTT_CERT_FILE=control-tower.pem" >> control-tower.env
+echo "MQTT_KEY_FILE=control-tower.key" >> control-tower.env
+echo "MQTT_CA_FILE=chain.pem" >> control-tower.env
+```
+
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
@@ -186,7 +224,6 @@ echo "MQTT_CLIENT_ID=control-tower" >> control-tower.env
 echo "MQTT_CERT_FILE=control-tower.pem" >> control-tower.env
 echo "MQTT_KEY_FILE=control-tower.key" >> control-tower.env
 echo "MQTT_CA_FILE=chain.pem" >> control-tower.env
-
 ```
 
 To use mosquitto without certificates: change the port to 1883 and disable TLS

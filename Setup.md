@@ -132,9 +132,10 @@ az iot ops init --simulate-plc --cluster $cluster_name --resource-group $rg --kv
 
 The default setup of AIO includes an instance of IoT MQ, with a broker configured with a test certificate. To access the MQTT secure endpoint you must enable the load balancer in your cluster and add the DNS name (localhost to access the cluster from your host) to the TLS server certificate:
 
-s
-```
-kubectl apply -f _mq/8883.yaml
+
+```bash
+# from _mq/
+kubectl apply -f 8883.yaml
 kubectl patch certificate aio-mq-frontend-server-8883 -n azure-iot-operations \
    --type='json' -p='[{"op": "add", "path": "/spec/dnsNames/-", "value": "localhost"}]'
 ```
@@ -144,10 +145,11 @@ kubectl patch certificate aio-mq-frontend-server-8883 -n azure-iot-operations \
 
 The client certificates generated in each of the scenarios should chain to the CA created [above](#create-ca).
 
-```
-cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > chain.pem
-kubectl configmap create mqtt-app-samples-root --from-file=client-ca.pem=chain.pem -n azure-iot-operations
-kubectl apply -f _mq/x509auth.yaml
+```bash
+# from _mq/
+cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > client-chain.pem
+kubectl create configmap client-ca --from-file=client-ca.pem=client-chain.pem -n azure-iot-operations
+kubectl apply -f x509auth.yaml
 ```
 
 

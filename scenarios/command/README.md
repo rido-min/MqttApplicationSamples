@@ -155,6 +155,34 @@ echo "MQTT_CERT_FILE=mobile-app.pem" >> mobile-app.env
 echo "MQTT_KEY_FILE=mobile-app.key" >> mobile-app.env
 ```
 
+## Configure IoT MQ
+
+Get the CA file to stablish the server TLS connection
+
+```bash
+# from scenarios/getting_started
+kubectl get configmap aio-ca-trust-bundle-test-only -n azure-iot-operations -o jsonpath='{.data.ca\.crt}' > chain.pem
+```
+
+Make sure the `client-ca` configmap has been created, from [SetUp](../../Setup.md)
+
+```bash
+# from folder scenarios/command
+echo "MQTT_HOST_NAME=localhost" > vehicle03.env
+echo "MQTT_TCP_PORT=8883" >> vehicle03.env
+echo "MQTT_CERT_FILE=vehicle03.pem" >> vehicle03.env
+echo "MQTT_KEY_FILE=vehicle03.key" >> vehicle03.env
+echo "MQTT_CLIENT_ID=vehicle03" >> vehicle03.env
+echo "MQTT_CA_FILE=chain.pem" >> vehicle03.env
+
+echo "MQTT_HOST_NAME=localhost" > mobile-app.env
+echo "MQTT_TCP_PORT=8883" >> mobile-app.env
+echo "MQTT_CERT_FILE=mobile-app.pem" >> mobile-app.env
+echo "MQTT_KEY_FILE=mobile-app.key" >> mobile-app.env
+echo "MQTT_CLIENT_ID=mobile-app" >> mobile-app.env
+echo "MQTT_CA_FILE=chain.pem" >> mobile-app.env
+```
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
@@ -181,7 +209,6 @@ echo "MQTT_CERT_FILE=mobile-app.pem" >> mobile-app.env
 echo "MQTT_KEY_FILE=mobile-app.key" >> mobile-app.env
 echo "MQTT_CLIENT_ID=mobile-app" >> mobile-app.env
 echo "MQTT_CA_FILE=chain.pem" >> mobile-app.env
-
 ```
 
 To use mosquitto without certificates: change the port to 1883 and disable TLS.

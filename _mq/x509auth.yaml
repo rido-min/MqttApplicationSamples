@@ -8,5 +8,5 @@ spec:
     - "listener" 
   authenticationMethods: 
     - x509: 
-        trustedClientCaCert: mqtt-app-samples-root
+        trustedClientCaCert: client-ca
         #attributes: x509-attributes
