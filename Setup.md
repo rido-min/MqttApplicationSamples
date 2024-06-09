@@ -1,12 +1,16 @@
 # Setup Environment
 
-| [Create CA](#create-ca) | [Configure Event Grid](#configure-event-grid-namespace) | [Configure Mosquitto](#configure-mosquitto-with-tls-and-x509-authentication) | [Development tools](#configure-development-tools) |
+| [Configure Event Grid](#configure-event-grid-namespace) | [Configure IoTMQ](#configure-iotmq) | [Configure Mosquitto](#configure-mosquitto-with-tls-and-x509-authentication) | [Development tools](#configure-development-tools) |
 
 Once your environment is configured you can configure your connection settings as environment variables that will be loaded by the [Mqtt client extensions](./mqttclients/README.md)
 
-### Create CA
 
-All samples require a CA to generate the client certificates to connect.
+
+## Configure Event Grid Namespace
+
+#### Create CA
+
+Event Grid samples require a CA to generate the client certificates to connect.
 
 - Follow this link to install the `step cli`: [https://smallstep.com/docs/step-cli/installation/](https://smallstep.com/docs/step-cli/installation/)
 - To create the root and intermediate CA certificates run:
@@ -26,9 +30,6 @@ Follow the cli instructions, when done make sure you remember the password used 
 - `~/.step/certs/intermediate_ca.crt`
 - `~/.step/secrets/root_ca_key`
 - `~/.step/secrets/intermediate_ca_key`
-
-## Configure Event Grid Namespace
-
 
 ### Configure environment variables
 
@@ -79,6 +80,79 @@ az resource create \
 
 > [!NOTE]
 > For portal configuration, use [this link](https://portal.azure.com/?microsoft_azure_marketplace_ItemHideKey=PubSubNamespace&microsoft_azure_eventgrid_assettypeoptions={"PubSubNamespace":{"options":""}}) and follow [these instructions](https://learn.microsoft.com/en-us/azure/event-grid/mqtt-publish-and-subscribe-portal).
+
+
+## Configure IoT MQ
+
+IoTMQ is deployed withing the Azure IoT Operations (aka AIO), following the instructions from https://learn.microsoft.com/en-us/azure/iot-operations/get-started/quickstart-deploy?tabs=codespaces
+
+Below is the summary of the deployment process:
+
+Include the cluster name and the location to the `az.env` file, so those variables can be reused in the deployment scripts.
+
+```text
+# az.env
+sub_id=<subscription-id>
+rg=<resource-group-name>
+cluster_name=<cluster-name>
+location=<location such as westus2>
+kv_name=<key vault name>
+```
+
+## Login into your azure subscription
+
+```
+source az.env
+az login 
+az account set -s $sub_id
+```
+
+### Have a K8s Cluster ready
+
+The codespaces configuration in this repo deploys a K8s cluster with `k3d`, any other supported cluster should also work, to verify your cluster is ready run `kubectl cluster-info`.
+
+### Connect the cluster to ARC
+
+```
+source az.env
+az connectedk8s connect -n $cluster_name -l $location -g $rg --subscription $sub_id
+export OBJECT_ID=$(az ad sp show --id bc313c14-388c-4e7d-a58e-70017303ee3b --query id -o tsv)
+az connectedk8s enable-features -n $cluster_name -g $rg --custom-locations-oid $OBJECT_ID --features cluster-connect custom-locations
+```
+
+### Deploy AIO
+
+```
+source az.env
+az keyvault create --enable-rbac-authorization false --name $kv_name --resource-group $rg
+az iot ops init --simulate-plc --cluster $cluster_name --resource-group $rg --kv-id $(az keyvault show --name $kv_name -o tsv --query id)
+```
+
+### Configure IoT MQ to access from outside the cluster
+
+The default setup of AIO includes an instance of IoT MQ, with a broker configured with a test certificate. To access the MQTT secure endpoint you must enable the load balancer in your cluster and add the DNS name (localhost to access the cluster from your host) to the TLS server certificate:
+
+
+```bash
+# from _mq/
+kubectl apply -f 8883.yaml
+kubectl patch certificate aio-mq-frontend-server-8883 -n azure-iot-operations \
+   --type='json' -p='[{"op": "add", "path": "/spec/dnsNames/-", "value": "localhost"}]'
+```
+
+#### Configure client authentication with X509 certificates
+
+
+The client certificates generated in each of the scenarios should chain to the CA created [above](#create-ca).
+
+```bash
+# from _mq/
+cat ~/.step/certs/root_ca.crt ~/.step/certs/intermediate_ca.crt > client-chain.pem
+kubectl create configmap client-ca --from-file=client-ca.pem=client-chain.pem -n azure-iot-operations
+kubectl apply -f x509auth.yaml
+```
+
+
 
 ## Configure Mosquitto with TLS and X509 Authentication
 

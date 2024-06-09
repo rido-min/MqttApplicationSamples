@@ -103,6 +103,30 @@ echo "MQTT_CERT_FILE=sample_client.pem" >> .env
 echo "MQTT_KEY_FILE=sample_client.key" >> .env
 ```
 
+## Configure IoT MQ
+
+Get the CA file to stablish the server TLS connection
+
+```bash
+# from scenarios/getting_started
+kubectl get configmap aio-ca-trust-bundle-test-only -n azure-iot-operations -o jsonpath='{.data.ca\.crt}' > chain.pem
+```
+
+Make sure the `client-ca` configmap has been created, from [SetUp](../../Setup.md)
+
+
+```bash
+# from folder scenarios/getting_started
+echo "MQTT_HOST_NAME=localhost" > .env
+echo "MQTT_TCP_PORT=8883" >> .env
+echo "MQTT_CLIENT_ID=sample_client" >> .env
+echo "MQTT_CERT_FILE=sample_client.pem" >> .env
+echo "MQTT_KEY_FILE=sample_client.key" >> .env
+echo "MQTT_CA_FILE=chain.pem" >> .env
+```
+
+
+
 ## :fly: Configure Mosquitto
 
 To establish the TLS connection, the CA needs to be trusted, most MQTT clients allow to specify the ca trust chain as part of the connection, to create a chain file with the root and the intermediate use:
@@ -117,6 +141,7 @@ The `chain.pem` is used by mosquitto via the `cafile` settings to authenticate X
 ```bash
 # from folder scenarios/getting_started
 echo "MQTT_HOST_NAME=localhost" > .env
+echo "MQTT_TCP_PORT=8884" >> .env
 echo "MQTT_CLIENT_ID=sample_client" >> .env
 echo "MQTT_CERT_FILE=sample_client.pem" >> .env
 echo "MQTT_KEY_FILE=sample_client.key" >> .env
